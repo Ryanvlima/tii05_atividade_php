@@ -64,18 +64,34 @@ class DisciplinaDAO
         $stmt->bindParam(':id', $id);
         $stmt->execute();
     }
-
-    // Método para obter disciplina com seus alunos
     public function getDisciplinaWithAlunos($disciplinaID)
     {
-        /*
-        Implemnte o retorno de uma disciplina, contendo seus respectivos alunos
-        */
+        $sql = "
+            SELECT disciplina.*, aluno.*
+            FROM disciplina
+            JOIN disciplina_aluno ON disciplina.id = disciplina_aluno.disciplina_id
+            JOIN aluno ON disciplina_aluno.aluno_id = aluno.matricula
+            WHERE disciplina.id = :disciplinaID
+        ";
+ 
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindParam(':disciplinaID', $disciplinaID);
+        $stmt->execute();
+ 
+        $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        if (!$result) return null;
+ 
+        $disciplina = new Disciplina($result[0]['id'], $result[0]['nome'], $result[0]['carga_horaria']);
+        $disciplina->setAlunos([]);
+ 
+        foreach ($result as $row) {
+            $aluno = new Aluno($row['matricula'], $row['nome']);
+            $disciplina->addAluno($aluno);
+        }
+ 
+        return $disciplina;
+    }    
 
-        return null;
-    }
-
-    // Método para obter os professores da disciplina
     public function getProfessoresForDisciplina($disciplinaID)
     {
         $sql = "SELECT p.id, p.nome, p.disciplina_id FROM professor p

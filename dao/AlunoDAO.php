@@ -61,11 +61,34 @@ class AlunoDAO
     }
 
     // Método para obter aluno com suas disciplinas
+
     public function getAlunoWithDisciplinas($alunoID)
     {
-        /*
-        Retorne a implementação de um objeto do tipo aluno, contendo suas respectivas disciplinas
-         */
-        return null;
-    }
+        $sql = "
+            SELECT aluno.*, disciplina.*
+            FROM aluno
+            JOIN disciplina_aluno ON aluno.matricula = disciplina_aluno.aluno_id
+            JOIN disciplina ON disciplina_aluno.disciplina_id = disciplina.id
+            WHERE aluno.matricula = :alunoID
+        ";
+ 
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindParam(':alunoID', $alunoID);
+        $stmt->execute();
+ 
+        $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        if (!$result) return null;
+ 
+        $aluno = new Aluno($result[0]['matricula'], $result[0]['nome']);
+        $aluno->setDisciplinas([]);
+ 
+        foreach ($result as $row) {
+            if (isset($row['id'], $row['nome'])) {
+                $disciplina = new Disciplina($row['id'], $row['nome'], $row['carga_horaria'] ?? null);
+                $aluno->addDisciplina($disciplina);
+            }
+        }
+ 
+        return $aluno;
+    }    
 }
