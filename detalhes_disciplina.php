@@ -29,8 +29,8 @@ if ($disciplinaID) {
 
     <h2>Alunos Matriculados</h2>
     <ul>
-        <?php foreach ($disciplina->getAlunos() as $aluno): ?>
-            <li><?= $aluno->getNome(); ?></li>
+        <?php foreach ($disciplina->getAlunos() as $aluno): ?> <!-- Use $aluno aqui -->
+            <li><?= $aluno->getNome(); ?></li> <!-- Acesse o nome do aluno corretamente -->
         <?php endforeach; ?>
     </ul>
 
@@ -43,4 +43,5 @@ if ($disciplinaID) {
 
     <a href="index.php">Voltar</a>
 </body>
+
 </html>

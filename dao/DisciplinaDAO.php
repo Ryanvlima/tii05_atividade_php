@@ -66,13 +66,11 @@ class DisciplinaDAO
     }
     public function getDisciplinaWithAlunos($disciplinaID)
     {
-        $sql = "
-            SELECT disciplina.*, aluno.*
+        $sql = " SELECT disciplina.*, aluno.*
             FROM disciplina
             JOIN disciplina_aluno ON disciplina.id = disciplina_aluno.disciplina_id
             JOIN aluno ON disciplina_aluno.aluno_id = aluno.matricula
-            WHERE disciplina.id = :disciplinaID
-        ";
+            WHERE disciplina.id = :disciplinaID";
  
         $stmt = $this->db->prepare($sql);
         $stmt->bindParam(':disciplinaID', $disciplinaID);
@@ -101,7 +99,7 @@ class DisciplinaDAO
         $stmt = $this->db->prepare($sql);
 
         $stmt->bindParam(':disciplinaID', $disciplinaID);
-        
+
         $stmt->execute();
 
         $professores = [];

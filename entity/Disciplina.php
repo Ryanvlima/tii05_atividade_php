@@ -47,9 +47,9 @@ class Disciplina {
  
     public function removeAluno($matricula) {
         foreach ($this->alunos as $key => $aluno) {
-            if ($aluno->getMatricula() === $matricula) {
-                unset($this->alunos[$key]);
-                return true;
+         if ($aluno->getMatricula() === $matricula) {
+             unset($this->alunos[$key]);
+             return true;
             }
         }
         return false;

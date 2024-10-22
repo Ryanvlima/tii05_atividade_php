@@ -61,34 +61,36 @@ class AlunoDAO
     }
 
     public function getAlunoWithDisciplinas($alunoID)
-    {
-        $sql = "
-            SELECT aluno.*, disciplina.*
-            FROM aluno
-            JOIN disciplina_aluno ON aluno.matricula = disciplina_aluno.aluno_id
-            JOIN disciplina ON disciplina_aluno.disciplina_id = disciplina.id
-            WHERE aluno.matricula = :alunoID
-        ";
- 
-        $stmt = $this->db->prepare($sql);
+{
+    $sql = "
+        SELECT aluno.matricula, aluno.nome AS aluno_nome,
+               disciplina.id AS disciplina_id, disciplina.nome AS disciplina_nome, disciplina.carga_horaria
+        FROM aluno
+        JOIN disciplina_aluno ON aluno.matricula = disciplina_aluno.aluno_id
+        JOIN disciplina ON disciplina_aluno.disciplina_id = disciplina.id
+        WHERE aluno.matricula = :alunoID
+    ";
 
-        $stmt->bindParam(':alunoID', $alunoID);
-        
-        $stmt->execute();
- 
-        $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        if (!$result) return null;
- 
-        $aluno = new Aluno($result[0]['matricula'], $result[0]['nome']);
-        $aluno->setDisciplinas([]);
- 
-        foreach ($result as $row) {
-            if (isset($row['id'], $row['nome'])) {
-                $disciplina = new Disciplina($row['id'], $row['nome'], $row['carga_horaria'] ?? null);
-                $aluno->addDisciplina($disciplina);
-            }
+    $stmt = $this->db->prepare($sql);
+    $stmt->bindParam(':alunoID', $alunoID);
+    $stmt->execute();
+
+    $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    if (!$result) return null;
+
+    // Cria o objeto Aluno
+    $aluno = new Aluno($result[0]['matricula'], $result[0]['aluno_nome']);
+    $aluno->setDisciplinas([]);
+
+    // Adiciona disciplinas ao aluno
+    foreach ($result as $row) {
+        if (isset($row['disciplina_id'], $row['disciplina_nome'])) {
+            $disciplina = new Disciplina($row['disciplina_id'], $row['disciplina_nome'], $row['carga_horaria']);
+            $aluno->addDisciplina($disciplina);
         }
- 
-        return $aluno;
-    }    
+    }
+
+    return $aluno;
+}
+
 }
