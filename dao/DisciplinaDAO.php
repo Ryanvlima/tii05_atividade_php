@@ -95,10 +95,13 @@ class DisciplinaDAO
     public function getProfessoresForDisciplina($disciplinaID)
     {
         $sql = "SELECT p.id, p.nome, p.disciplina_id FROM professor p
+
             WHERE p.disciplina_id = :disciplinaID";
 
         $stmt = $this->db->prepare($sql);
+
         $stmt->bindParam(':disciplinaID', $disciplinaID);
+        
         $stmt->execute();
 
         $professores = [];

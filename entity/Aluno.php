@@ -3,7 +3,7 @@
 class Aluno {
     private $matricula;
     private $nome;
-    private $disciplinas;
+    private $disciplinas = [];
 
     public function __construct($matricula, $nome) {
         $this->matricula = $matricula;
@@ -23,19 +23,20 @@ class Aluno {
         $this->nome = $nome;
     }
 
-    // Método para obter o array de disciplinas
+    // Método para obter o array
     public function getDisciplinas() {
         return $this->disciplinas;
     }
 
-    // Método para definir o array de disciplinas
+    // Método para definir o array 
     public function setDisciplinas(array $disciplinas) {
         $this->disciplinas = $disciplinas;
     }
 
-    // Método para adicionar uma disciplina individual
+    // Método para adicionar uma disciplina 
     public function addDisciplina($disciplina) {
         $this->disciplinas[] = $disciplina;
     }
 }
 ?>
+o

@@ -60,8 +60,6 @@ class AlunoDAO
         $stmt->execute();
     }
 
-    // Método para obter aluno com suas disciplinas
-
     public function getAlunoWithDisciplinas($alunoID)
     {
         $sql = "
@@ -73,7 +71,9 @@ class AlunoDAO
         ";
  
         $stmt = $this->db->prepare($sql);
+
         $stmt->bindParam(':alunoID', $alunoID);
+        
         $stmt->execute();
  
         $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
